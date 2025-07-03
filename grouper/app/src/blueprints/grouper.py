@@ -66,7 +66,7 @@ def group_detections():
         try:
             X = np.vstack(embeddings)
             dist = cosine_distances(X)
-            clusterer = DBSCAN(eps=0.3, min_samples=2, metric="precomputed")
+            clusterer = DBSCAN(eps=0.01, min_samples=2, metric="precomputed")
             labels = clusterer.fit_predict(dist)
         except Exception as e:
             logger.exception("Clustering failed: %s", e)
