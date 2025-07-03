@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     port: int = 5000
     debug: bool = False
     detector_url: str = "http://detector:5001/detect"
+    grouper_url: str = "http://grouper:5003/group"
 
     class Config:
         env_prefix = "DETECTOR_"

@@ -9,7 +9,7 @@ class Settings(BaseSettings):
         " %(filename)s:%(lineno)d - %(name)s - %(message)s"
     )
     host: str = "0.0.0.0"
-    port: int = 5001
+    port: int = 5003
     debug: bool = False
 
     class Config:

@@ -1,10 +1,10 @@
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY app .
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "detector:app", "--workers=1", "--threads=1"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5003", "main:app", "--workers=1", "--threads=1"]
