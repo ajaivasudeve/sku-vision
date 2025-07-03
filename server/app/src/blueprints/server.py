@@ -25,7 +25,7 @@ def process_image():
         detector_response = requests.post(
             DETECTOR_URL,
             files={"image": (file.filename, image_bytes, file.mimetype)},
-            timeout=30
+            timeout=120
         )
         detector_response.raise_for_status()
         detections_json = detector_response.json()
@@ -36,7 +36,7 @@ def process_image():
             GROUPER_URL,
             files={"image": (file.filename, image_bytes, file.mimetype)},
             data={"detections": json.dumps(detections_json["detections"])},
-            timeout=30
+            timeout=120
         )
         grouper_response.raise_for_status()
         grouped_json = grouper_response.json()
