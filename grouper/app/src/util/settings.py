@@ -16,6 +16,6 @@ class Settings(BaseSettings):
     downsample_resolution: int = 28
 
     class Config:
-        env_prefix = "DETECTOR_"
+        env_prefix = "GROUPER_"
         env_file = ".env"
         env_file_encoding = "utf-8"

@@ -13,6 +13,6 @@ class Settings(BaseSettings):
     request_timeout: float = 300
 
     class Config:
-        env_prefix = "DETECTOR_"
+        env_prefix = "INTERFACE_"
         env_file = ".env"
         env_file_encoding = "utf-8"

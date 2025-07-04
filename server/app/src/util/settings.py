@@ -17,6 +17,6 @@ class Settings(BaseSettings):
     grouper_timeout: float = 300
 
     class Config:
-        env_prefix = "DETECTOR_"
+        env_prefix = "SERVER_"
         env_file = ".env"
         env_file_encoding = "utf-8"
