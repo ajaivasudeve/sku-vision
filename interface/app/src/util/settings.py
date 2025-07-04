@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     )
     debug: bool = False
     server_url: str = "http://server:5000/process"
+    request_timeout: float = 300
 
     class Config:
         env_prefix = "DETECTOR_"

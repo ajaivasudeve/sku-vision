@@ -13,6 +13,8 @@ class Settings(BaseSettings):
     debug: bool = False
     detector_url: str = "http://detector:5001/detect"
     grouper_url: str = "http://grouper:5003/group"
+    detector_timeout: float = 300
+    grouper_timeout: float = 300
 
     class Config:
         env_prefix = "DETECTOR_"

@@ -10,6 +10,7 @@ settings = Settings()
 logger = get_logger(__name__)
 
 SERVER_URL = settings.server_url
+TIMEOUT = settings.request_timeout
 
 st.set_page_config(page_title="Product Detector", layout="centered")
 st.title("🧠 Product Detection Interface")
@@ -28,7 +29,7 @@ if uploaded_file:
         try:
             uploaded_file.seek(0)
             files = {"image": (uploaded_file.name, uploaded_file.read(), uploaded_file.type)}
-            response = requests.post(SERVER_URL, files=files, timeout=300)
+            response = requests.post(SERVER_URL, files=files, timeout=TIMEOUT)
             response.raise_for_status()
 
             result = response.json()
