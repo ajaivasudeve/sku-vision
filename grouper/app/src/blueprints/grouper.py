@@ -59,7 +59,8 @@ def group_detections():
         except UnidentifiedImageError:
             return jsonify({"error": "Invalid image"}), 400
 
-        image = normalize_luminance(image, apply_clahe=settings.apply_clahe)
+        if settings.luminance_normalization:
+            image = normalize_luminance(image, apply_clahe=settings.apply_clahe)
 
         try:
             detections = json.loads(request.form["detections"])
@@ -73,7 +74,7 @@ def group_detections():
         for i, box in enumerate(boxes):
             try:
                 x1, y1, x2, y2 = map(int, box)
-                crop = image.crop((x1, y1, x2, y2)).resize((16, 16), resample=Image.BOX)
+                crop = image.crop((x1, y1, x2, y2)).resize((settings.downsample_resolution, settings.downsample_resolution), resample=Image.BOX)
                 arr = np.asarray(crop).astype(np.float32) / 255.0
                 features.append(arr.flatten())
                 valid_indices.append(i)

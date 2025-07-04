@@ -11,7 +11,9 @@ class Settings(BaseSettings):
     host: str = "0.0.0.0"
     port: int = 5003
     debug: bool = False
+    luminance_normalization: bool = False
     apply_clahe: bool = True
+    downsample_resolution: int = 28
 
     class Config:
         env_prefix = "DETECTOR_"
