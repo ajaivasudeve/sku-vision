@@ -1,0 +1,28 @@
+services:
+  server:
+    build: ./server
+    container_name: server
+    ports:
+      - "5000:5000"
+    depends_on:
+      - detector
+      - interface
+      - grouper
+
+  detector:
+    build: ./detector
+    container_name: detector
+    ports:
+      - "5001:5001"
+
+  interface:
+    build: ./interface
+    container_name: interface
+    ports:
+      - "5002:5002"
+  
+  grouper:
+    build: ./grouper
+    container_name: grouper
+    ports:
+      - "5003:5003"
