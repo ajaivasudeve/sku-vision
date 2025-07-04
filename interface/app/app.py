@@ -53,8 +53,8 @@ if uploaded_file:
 
         except requests.RequestException as e:
             logger.exception("Request failed: %s", e)
-            st.error(f"Failed to contact server: {e}")
+            st.error("Something went wrong!")
 
         except Exception as e:
             logger.exception("Unexpected error: %s", e)
-            st.error(f"Something went wrong: {e}")
+            st.error("Something went wrong!")
