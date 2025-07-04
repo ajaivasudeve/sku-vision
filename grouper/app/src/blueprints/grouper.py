@@ -50,7 +50,7 @@ def group_detections():
                 inputs = processor(images=crop, return_tensors="pt").to(device)
                 with torch.no_grad():
                     out = model(**inputs)
-                    tokens = out.last_hidden_state  # [1, 1+Np, D]
+                    tokens = out.last_hidden_state
                     patch_tokens = tokens[:, 1:, :]
                     h = int(224 / patch_size)
                     patch_tokens = patch_tokens.view(1, h, h, -1)

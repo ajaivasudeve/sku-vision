@@ -40,7 +40,6 @@ def detect():
             logger.warning("Invalid image file received")
             return jsonify({"error": "Invalid image file"}), 400
 
-        # Prepare image for model
         inputs = processor(images=image, return_tensors="pt")
         inputs = {k: v.to(device) for k, v in inputs.items()}
 

@@ -6,7 +6,6 @@ from collections import defaultdict
 from src.util.settings import Settings
 from src.util.logger import get_logger
 
-# Load settings and logger
 settings = Settings()
 logger = get_logger(__name__)
 
@@ -37,7 +36,6 @@ if uploaded_file:
             logger.info("Detection successful: %d detections", len(detections))
             st.success("Detection complete!")
 
-            # Assign a unique random color to each label
             label_colors = defaultdict(lambda: (random.randint(50, 255), random.randint(50, 255), random.randint(50, 255)))
 
             draw = ImageDraw.Draw(image)
