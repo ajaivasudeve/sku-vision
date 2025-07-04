@@ -13,6 +13,70 @@ GROUPER_URL = settings.grouper_url
 DETECTOR_TIMEOUT = settings.detector_timeout
 GROUPER_TIMEOUT = settings.grouper_timeout
 
+def compute_iou(boxA, boxB):
+    try:
+        x1 = max(boxA[0], boxB[0])
+        y1 = max(boxA[1], boxB[1])
+        x2 = min(boxA[2], boxB[2])
+        y2 = min(boxA[3], boxB[3])
+
+        inter_area = max(0, x2 - x1) * max(0, y2 - y1)
+        if inter_area == 0:
+            return 0.0
+
+        areaA = (boxA[2] - boxA[0]) * (boxA[3] - boxA[1])
+        areaB = (boxB[2] - boxB[0]) * (boxB[3] - boxB[1])
+        union_area = areaA + areaB - inter_area
+
+        return inter_area / union_area
+    except Exception as e:
+        logger.warning("Failed to compute IoU for boxes %s and %s: %s", boxA, boxB, e)
+        return 0.0
+
+def merge_grouped_boxes(detections, iou_threshold=0.7):
+    merged_by_cluster = {}
+    for d in detections:
+        label = d.get("label", "noise")
+        merged_by_cluster.setdefault(label, []).append(d["bbox"])
+
+    final_detections = []
+    logger.info("Starting merge of grouped boxes with IoU threshold %.2f", iou_threshold)
+
+    for label, boxes in merged_by_cluster.items():
+        logger.info("Processing cluster '%s' with %d boxes", label, len(boxes))
+        used = [False] * len(boxes)
+
+        for i in range(len(boxes)):
+            if used[i]:
+                continue
+            try:
+                x1, y1, x2, y2 = boxes[i]
+                merged_box = [x1, y1, x2, y2]
+
+                for j in range(i + 1, len(boxes)):
+                    if used[j]:
+                        continue
+                    iou = compute_iou(merged_box, boxes[j])
+                    if iou >= iou_threshold:
+                        logger.info("Merging box %s with %s (IoU=%.2f)", merged_box, boxes[j], iou)
+                        merged_box[0] = min(merged_box[0], boxes[j][0])
+                        merged_box[1] = min(merged_box[1], boxes[j][1])
+                        merged_box[2] = max(merged_box[2], boxes[j][2])
+                        merged_box[3] = max(merged_box[3], boxes[j][3])
+                        used[j] = True
+
+                used[i] = True
+                final_detections.append({
+                    "bbox": merged_box,
+                    "label": label
+                })
+            except Exception as e:
+                logger.warning("Failed to merge box index %d in cluster '%s': %s", i, label, e)
+
+    logger.info("Box merging completed. Final merged box count: %d", len(final_detections))
+    return final_detections
+
+
 @server_bp.route("/process", methods=["POST"])
 def process_image():
     if "image" not in request.files:
@@ -44,7 +108,21 @@ def process_image():
         grouped_json = grouper_response.json()
         logger.info("Received grouped detections")
 
-        return jsonify(grouped_json)
+        detections = grouped_json.get("detections", [])
+        merged_detections = merge_grouped_boxes(detections, iou_threshold=0.33)
+
+        cluster_counts = {}
+        for d in detections:
+            label = d.get("label", "noise")
+            cluster_counts[label] = cluster_counts.get(label, 0) + 1
+
+        return jsonify({
+            "detections": merged_detections,
+            "metadata": {
+                "cluster_counts": cluster_counts,
+                "total_clusters": len(cluster_counts)
+            }
+        })
 
     except requests.RequestException as e:
         logger.exception("HTTP call failed: %s", e)
@@ -53,3 +131,4 @@ def process_image():
     except Exception as e:
         logger.exception("Unexpected error in /process: %s", e)
         return jsonify({"error": "Internal server error"}), 500
+

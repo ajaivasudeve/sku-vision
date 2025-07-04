@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     host: str = "0.0.0.0"
     port: int = 5003
     debug: bool = False
+    apply_clahe: bool = True
 
     class Config:
         env_prefix = "DETECTOR_"
