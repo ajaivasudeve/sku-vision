@@ -9,7 +9,7 @@ from src.util.logger import get_logger
 settings = Settings()
 logger = get_logger(__name__)
 
-SERVER_URL = settings.server_url or "http://localhost:5000/process"
+SERVER_URL = settings.server_url
 
 st.set_page_config(page_title="Product Detector", layout="centered")
 st.title("🧠 Product Detection Interface")
