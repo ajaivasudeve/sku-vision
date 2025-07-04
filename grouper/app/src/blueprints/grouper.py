@@ -14,7 +14,7 @@ logger = get_logger(__name__)
 
 try:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    processor = AutoImageProcessor.from_pretrained("facebook/dinov2-base")
+    processor = AutoImageProcessor.from_pretrained("facebook/dinov2-base", use_fast=True)
     model = AutoModel.from_pretrained("facebook/dinov2-base").to(device)
     model.eval()
     patch_size = model.config.patch_size
