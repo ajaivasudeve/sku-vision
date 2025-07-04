@@ -44,7 +44,7 @@ if uploaded_file:
                 bbox = det["bbox"]
                 label = det["label"]
                 color = label_colors[label]
-                draw.rectangle(bbox, outline=color, width=3)
+                draw.rectangle(bbox, outline=color, width=5)
                 draw.text((bbox[0], bbox[1] - 10), label, fill=color)
 
             st.image(image, caption="Detected Products", use_container_width=True)

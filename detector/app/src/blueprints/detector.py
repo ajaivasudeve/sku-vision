@@ -34,7 +34,7 @@ def detect():
         file = request.files["image"]
 
         try:
-            image = Image.open(BytesIO(file.read()))
+            image = Image.open(BytesIO(file.read())).convert("RGB")
             image = ImageOps.exif_transpose(image)
         except UnidentifiedImageError:
             logger.warning("Invalid image file received")
