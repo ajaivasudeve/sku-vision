@@ -71,7 +71,7 @@ def group_detections():
             metric="precomputed",
             min_cluster_size=2,
             min_samples=2,
-            cluster_selection_method="leaf"
+            cluster_selection_method="eom"
         )
         labels = clusterer.fit_predict(dist)
 
