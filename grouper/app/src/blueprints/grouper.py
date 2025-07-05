@@ -12,6 +12,7 @@ grouper_bp = Blueprint("grouper", __name__)
 logger = get_logger(__name__)
 settings = Settings()
 
+
 def normalize_luminance(pil_image, apply_clahe=False):
     try:
         logger.info("Starting luminance normalization (CLAHE=%s)", apply_clahe)
@@ -48,6 +49,7 @@ def normalize_luminance(pil_image, apply_clahe=False):
         logger.exception("Error during luminance normalization: %s", e)
         return pil_image
 
+
 @grouper_bp.route("/group", methods=["POST"])
 def group_detections():
     try:
@@ -74,7 +76,10 @@ def group_detections():
         for i, box in enumerate(boxes):
             try:
                 x1, y1, x2, y2 = map(int, box)
-                crop = image.crop((x1, y1, x2, y2)).resize((settings.downsample_resolution, settings.downsample_resolution), resample=Image.BOX)
+                crop = image.crop((x1, y1, x2, y2)).resize(
+                    (settings.downsample_resolution, settings.downsample_resolution),
+                    resample=Image.BOX,
+                )
                 arr = np.asarray(crop).astype(np.float32) / 255.0
                 features.append(arr.flatten())
                 valid_indices.append(i)
@@ -90,7 +95,7 @@ def group_detections():
             metric="euclidean",
             min_cluster_size=2,
             min_samples=2,
-            cluster_selection_method="eom"
+            cluster_selection_method="eom",
         )
         labels = clusterer.fit_predict(X)
 

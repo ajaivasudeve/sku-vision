@@ -28,7 +28,9 @@ if uploaded_file:
 
         try:
             uploaded_file.seek(0)
-            files = {"image": (uploaded_file.name, uploaded_file.read(), uploaded_file.type)}
+            files = {
+                "image": (uploaded_file.name, uploaded_file.read(), uploaded_file.type)
+            }
             response = requests.post(SERVER_URL, files=files, timeout=TIMEOUT)
             response.raise_for_status()
 
@@ -37,7 +39,13 @@ if uploaded_file:
             logger.info("Detection successful: %d detections", len(detections))
             st.success("Detection complete!")
 
-            label_colors = defaultdict(lambda: (random.randint(50, 255), random.randint(50, 255), random.randint(50, 255)))
+            label_colors = defaultdict(
+                lambda: (
+                    random.randint(50, 255),
+                    random.randint(50, 255),
+                    random.randint(50, 255),
+                )
+            )
 
             draw = ImageDraw.Draw(image)
             for det in detections:

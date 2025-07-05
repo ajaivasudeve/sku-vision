@@ -17,7 +17,9 @@ try:
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
-    logger.info("Detection model and processor loaded successfully on device: %s", device)
+    logger.info(
+        "Detection model and processor loaded successfully on device: %s", device
+    )
 
 except Exception as e:
     logger.exception("Failed to load DETR model or processor: %s", e)
@@ -47,18 +49,22 @@ def detect():
             outputs = model(**inputs)
 
         target_sizes = torch.tensor([image.size[::-1]]).to(device)
-        results = processor.post_process_object_detection(outputs, target_sizes=target_sizes, threshold=0.8)[0]
+        results = processor.post_process_object_detection(
+            outputs, target_sizes=target_sizes, threshold=0.8
+        )[0]
 
         detections = []
         for score, label, box in zip(
             results["scores"], results["labels"], results["boxes"]
         ):
             box = [round(i, 2) for i in box.tolist()]
-            detections.append({
-                "label": model.config.id2label[label.item()],
-                "score": round(score.item(), 3),
-                "bbox": box
-            })
+            detections.append(
+                {
+                    "label": model.config.id2label[label.item()],
+                    "score": round(score.item(), 3),
+                    "bbox": box,
+                }
+            )
 
         logger.info("Detected %d objects", len(detections))
         return jsonify({"detections": detections})
