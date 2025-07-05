@@ -9,7 +9,7 @@ A modular microservice-based system for detecting and grouping products in retai
 ### 1. Start the System
 
 ```bash
-docker compose up --build --force-recreate
+docker compose up
 ```
 
 This will build and launch all services.
