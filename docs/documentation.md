@@ -2,7 +2,7 @@
 
 ## 🚀 Summary
 
-The objective of this project was to develop a modular system for product detection and grouping from retail shelf images. The system was required to identify individual product instances and group visually similar items under shared cluster identifiers. Given the 24-hour delivery timeline, the design emphasized speed of implementation, clean modularity, and computational efficiency.
+The objective of this project was to develop a modular system for product detection and grouping from retail shelf images. The system was required to identify individual product instances and group visually similar items under shared cluster identifiers. 
 
 ---
 
